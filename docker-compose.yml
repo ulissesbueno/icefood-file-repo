@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  ftp:
+    image: fauria/vsftpd
+    container_name: ftp.server
+    environment:
+      - FTP_USER=${FTP_USER}
+      - FTP_PASS=${FTP_PASS}
+
+      # IP PÚBLICO DA LINODE – ESSENCIAL PARA MODO PASSIVO FUNCIONAR
+      - PASV_ADDRESS=172.235.32.55
+
+      # RANGE DE PORTAS PASSIVAS (SEU RANGE ATUAL)
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+
+      - LOCAL_UMASK=022
+
+    ports:
+      - "${FTP_PORT}:21"
+      - "21100-21110:21100-21110"
+
+    volumes:
+      - ./data/uploads:/home/vsftpd/${FTP_USER}
+    restart: unless-stopped
+
+  web:
+    image: nginx:alpine
+    container_name: web.server
+    volumes:
+      - ./data/uploads:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8066:80"
+    expose:
+      - "80"
+    networks:
+      - proxy
+      - default
+    restart: unless-stopped
+
+  # cleaner:
+  #   image: alpine
+  #   container_name: ftp.cleaner
+  #   volumes:
+  #     - ./scripts:/scripts
+  #     - ./data/uploads:/data/uploads
+  #   environment:
+  #     - EXPIRE_HOURS=${EXPIRE_HOURS}
+  #   command: >
+  #     sh -c "echo '*/5 * * * * /scripts/fix-permissions.sh >> /var/log/permissions.log 2>&1' | crontab - && 
+  #            echo '0 * * * * /scripts/clean.sh >> /var/log/cleaner.log 2>&1' | crontab - && 
+  #            crond -f -L /dev/stdout"
+  #   restart: unless-stopped
+
+networks:
+  proxy:
+    external: true
+    name: proxy
