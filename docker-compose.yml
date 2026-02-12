@@ -3,7 +3,7 @@ version: "3.8"
 services:
   ftp:
     image: fauria/vsftpd
-    container_name: ftp.server
+    container_name: ftp.icefood
     environment:
       - FTP_USER=${FTP_USER}
       - FTP_PASS=${FTP_PASS}
@@ -25,9 +25,9 @@ services:
       - ./data/uploads:/home/vsftpd/${FTP_USER}
     restart: unless-stopped
 
-  web:
+  files:
     image: nginx:alpine
-    container_name: web.server
+    container_name: files.icefood
     volumes:
       - ./data/uploads:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
