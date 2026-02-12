@@ -9,17 +9,18 @@ services:
       - FTP_PASS=${FTP_PASS}
 
       # IP PÚBLICO DA LINODE – ESSENCIAL PARA MODO PASSIVO FUNCIONAR
+
       - PASV_ADDRESS=172.235.32.55
 
-      # RANGE DE PORTAS PASSIVAS (SEU RANGE ATUAL)
-      - PASV_MIN_PORT=21100
-      - PASV_MAX_PORT=21110
+        # RANGE DE PORTAS PASSIVAS (NOVO RANGE LIVRE)
+      - PASV_MIN_PORT=21200
+      - PASV_MAX_PORT=21210
 
       - LOCAL_UMASK=022
 
     ports:
       - "${FTP_PORT}:21"
-      - "21100-21110:21100-21110"
+      - "21200-21210:21200-21210"
 
     volumes:
       - ./data/uploads:/home/vsftpd/${FTP_USER}
