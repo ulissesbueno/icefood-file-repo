@@ -20,11 +20,14 @@ services:
 
     ports:
       - "${FTP_PORT}:21"
-      - "21200-21210:21200-21210"
+      #- "21200-21210:21200-21210"
 
     volumes:
       - ./data/uploads:/home/vsftpd/${FTP_USER}
     restart: unless-stopped
+    networks:
+      - proxy
+      - proxy-net
 
   files:
     image: nginx:alpine
@@ -38,7 +41,7 @@ services:
       - "80"
     networks:
       - proxy
-      - default
+      - proxy-net
     restart: unless-stopped
 
   # cleaner:
@@ -59,3 +62,6 @@ networks:
   proxy:
     external: true
     name: proxy
+  proxy-net:
+    external: true
+    name: proxy-net

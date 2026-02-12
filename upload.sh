@@ -2,7 +2,7 @@
 
 # --- Configurações fixas ---
 FTP_HOST="172.235.32.55"
-FTP_USER="agoradelivey"
+FTP_USER="agoradelivery"
 FTP_PASS="X9rA4vT7kJ2mQ6bP"
 REMOTE_DIR=""
 
